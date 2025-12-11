@@ -24,12 +24,12 @@ jobs:
       # Step 3: Build Backend Docker Image
       - name: Build Backend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-backend:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-backend:latest ./backend
 
       # Step 4: Build Frontend Docker Image
       - name: Build Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest ./frontend
 
       # Step 5: Push Backend Image
       - name: Push Backend Image
