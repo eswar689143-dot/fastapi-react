@@ -63,4 +63,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest
 
             # Start updated services
-              docker-compose -f docker-compose.yml up -d
+              docker compose -f docker-compose.yml up -d
