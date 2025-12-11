@@ -1,0 +1,66 @@
+name: Build, Push & Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout source code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Login to DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 3: Build Backend Docker Image
+      - name: Build Backend Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-backend:latest ./backend
+
+      # Step 4: Build Frontend Docker Image
+      - name: Build Frontend Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest ./frontend
+
+      # Step 5: Push Backend Image
+      - name: Push Backend Image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-backend:latest
+
+      # Step 6: Push Frontend Image
+      - name: Push Frontend Image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest
+
+
+  deploy_to_ec2:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+
+    steps:
+      # Step 7: SSH into EC2 and deploy latest containers
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Stop old containers
+            docker compose -f ~/docker-compose.yml down || true
+
+            # Pull new images
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-backend:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest
+
+            # Start updated services
+            docker compose -f ~/docker-compose.yml up -d
