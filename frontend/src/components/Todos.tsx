@@ -89,7 +89,9 @@ function AddTodo() {
 const UpdateTodo = ({ item, id, fetchTodos }: UpdateTodoProps) => {
   const [todo, setTodo] = useState(item);
   const updateTodo = async () => {
-    await fetch(`http://localhost:8000/todo/${id}`, {
+    
+    await fetch(`http://backend:8000/todo/${id}`, {
+ // await fetch(`http://localhost:8000/todo/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ item: todo }),
@@ -143,7 +145,9 @@ const UpdateTodo = ({ item, id, fetchTodos }: UpdateTodoProps) => {
 
 const DeleteTodo = ({ id, fetchTodos }: DeleteTodoProps) => {
   const deleteTodo = async () => {
-    await fetch(`http://localhost:8000/todo/${id}`, {
+
+    await fetch(`http://backend:8000/todo/${id}`, {
+ // await fetch(`http://localhost:8000/todo/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: id })
@@ -175,7 +179,8 @@ function TodoHelper({item, id, fetchTodos}: TodoHelperProps) {
 export default function Todos() {
   const [todos, setTodos] = useState([])
   const fetchTodos = async () => {
-    const response = await fetch("http://localhost:8000/todo")
+    const response = await fetch("http://backend:8000/todo");
+ // const response = await fetch("http://localhost:8000/todo")
     const todos = await response.json()
     setTodos(todos.data)
   }
