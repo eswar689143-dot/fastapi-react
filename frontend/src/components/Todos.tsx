@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import {
   Box,
   Button,
@@ -18,10 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 
-interface Todo {
-  id: string;
-  item: string;
-}
+const [todos, setTodos] = useState<Todo[]>([]);
 
 interface UpdateTodoProps {
   item: string;
