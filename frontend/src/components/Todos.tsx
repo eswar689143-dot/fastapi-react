@@ -59,12 +59,19 @@ function AddTodo() {
       "item": item
     }
 
-    fetch("http://localhost:8000/todo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newTodo)
-    }).then(fetchTodos)
-  }
+  //   fetch("http://localhost:8000/todo", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(newTodo)
+  //   }).then(fetchTodos)
+  // }
+
+  fetch("http://backend:8000/todo", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(newTodo)
+}).then(fetchTodos);
+
 
   return (
     <form onSubmit={handleSubmit}>
