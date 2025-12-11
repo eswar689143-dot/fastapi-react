@@ -55,12 +55,18 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd /home/ubuntu/app
+            
             # Stop old containers
-            docker compose -f ~/docker-compose.yml down || true
-
+              docker compose down || true
+              
             # Pull new images
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-backend:latest
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-frontend:latest
+              docker compose pull
 
             # Start updated services
-              docker compose -f docker-compose.yml up -d
+              docker compose up -d
+
+            # Show running containers
+              docker ps -a
+
+
